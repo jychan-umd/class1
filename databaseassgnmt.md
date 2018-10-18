@@ -14,18 +14,21 @@ First, I would find committees that have supported Democratic candidates other t
 ```
 select DISTINCT CMTE_ID from committee2candidate where CAND_ID IN (select CAND_ID from candidate where CAND_PTY_AFFILIATION = "DEM") and CMTE_ID NOT IN (select CMTE_ID from committee2candidate where CAND_ID = "S6MD03177") LIMIT 25;
 ```
+*sample data: https://github.com/jychan-umd/class1/blob/db-assignment/committeesSupportingDemsNotCardin.csv*
 
 Then I would find Maryland donors who had made contributions to those committees:
 
 ```
 select * from marylandcontributions where cmte_ID in ("C00411116", "C00010470", "C00242271", "C00076182", "C00186064", "C00238444", "C00382028", "C00497933", "C00513531", "C00195628", "C00494203", "C00556266", "C00557256", "C00258475", "C00409219", "C00336057", "C00428094", "C00393769", "C00292094", "C00280743", "C00078535", "C00040253", "C00142711", "C00340455", "C00397067");
 ```
+*sample data: https://github.com/jychan-umd/class1/blob/db-assignment/MDdonorsCommittessOtherDems.csv*
 
 And I would want to exclude Maryland donors who had contributed to a Cardin-supporting committee, whom I would find using this query:
 
 ```
 select * from marylandcontributions where CMTE_ID IN (select CMTE_ID from committee2candidate where CAND_ID = "S6MD03177");  
 ```
+*sample data: https://github.com/jychan-umd/class1/blob/db-assignment/committeesForCardin.csv*
 
 *Note: I was not able to figure out how to combine these three queries in MySQL.  In addition, the server timed out trying to run the first query therefore I limited this to 25 rows, which impacts all subsequent queries as they are only running off of a subset of the relevant committees.*
 
@@ -40,6 +43,7 @@ I would find committees that had supported Democratic candidates and then order 
 ```
 select * from committee where cmte_ID IN (select cmte_ID from committee2candidate where cand_ID in (select CAND_ID from candidate where CAND_PTY_AFFILIATION = "DEM")) order by tres_nm desc;
 ```
+*sample data: https://github.com/jychan-umd/class1/blob/db-assignment/bytreasurer.csv*
 
 **Potential issue with the data:**
 In the Committees table, the Treasurer names are formatted inconsistently.  Some are “First Last” and some are “Last, First.”  Some are listed with “M.D.” as a suffix while others are listed with “Dr.” as a suffix.  There also appear to be some spaces in this column.  These data will need to be cleaned and standardized before attempting to conduct any analysis looking for relationships based on common individuals (by name).
